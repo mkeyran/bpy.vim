@@ -73,6 +73,7 @@ def post():
 
 
 vim.command("silent write")
+cursor = vim.current.window.cursor
 try:
     post()
     vim.command("silent edit!")
@@ -81,3 +82,4 @@ try:
 except Exception as e:
     print(e.__class__)
     print(e.message)
+vim.current.window.cursor = cursor
