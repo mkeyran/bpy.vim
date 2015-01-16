@@ -25,7 +25,7 @@ import os
 import imp
 from bpy.handlers import handlers
 from bpy.services import find_service, services
-
+import traceback
 
 def load_config(path_to_credentials):
     _mod_data = imp.find_module("brc", [path_to_credentials])
@@ -49,6 +49,7 @@ def find_credentials():
 
 def post():
     path_to_credentials = find_credentials()
+    os.chdir(path_to_credentials)
     service_options = {}
     rc = load_config(path_to_credentials)
     if rc:
@@ -73,6 +74,7 @@ def post():
 
 
 vim.command("silent write")
+cwd = os.getcwd()
 cursor = vim.current.window.cursor
 try:
     post()
@@ -80,6 +82,8 @@ try:
     vim.command("silent redraw!")
     vim.command("echo 'Post submitted'")
 except Exception as e:
+    traceback.print_exc()
     print(e.__class__)
     print(e.message)
+os.chdir(cwd)
 vim.current.window.cursor = cursor
